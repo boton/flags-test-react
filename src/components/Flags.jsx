@@ -16,18 +16,7 @@ class Flags extends React.Component {
   };
 
   static defaultProps = {
-    companyName: "Liferay",
-    enabled: true,
-    message: "Report",
-    reasons: {
-      "harmful-dangerous-acts": "Harmful Dangerous Acts",
-      "infringes-my-rights": "Infringes My Rights",
-      "sexual-content": "Sexual Content",
-      "hateful-or-abusive-content": "Hateful or Abusive Content",
-      spam: "Spam",
-      "violent-or-repulsive-content": "Violent or Repulsive Content"
-    },
-    urlTermsOfUse: "https://google.com"
+    enabled: true
   };
 
   constructor(props) {
@@ -54,7 +43,7 @@ class Flags extends React.Component {
 
   handleSubmitReport(e) {
     e.preventDefault();
-    debugger;
+
     this.setState({ isSending: true }, () => {
       delay(2000).then(() => this.setState({ isSuccessful: true }));
     });
