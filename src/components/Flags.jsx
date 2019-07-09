@@ -61,7 +61,13 @@ class Flags extends React.Component {
   }
 
   render() {
-    const { enabled, message, urlTermsOfUse, reasons } = this.props;
+    const {
+      companyName,
+      enabled,
+      message,
+      reasons,
+      urlTermsOfUse
+    } = this.props;
     const { reportDialogOpen, isSuccessful, isSending } = this.state;
 
     return (
@@ -78,6 +84,7 @@ class Flags extends React.Component {
         </ClayButton>
         {reportDialogOpen && (
           <FlagsModal
+            companyName={companyName}
             handleClose={this.handleClickClose}
             handleSubmit={this.handleSubmitReport}
             isSending={isSending}

@@ -60,8 +60,8 @@ const ModalContentSuccess = ({ handleClose, companyName }) => (
       </p>
       <p>
         Although we cannot disclose our final decision, we do review every
-        report and appreciate your effort to make sure {companyName} is a safe
-        environment for everyone.
+        report and appreciate your effort to make sure{" "}
+        <strong>{companyName}</strong> is a safe environment for everyone.
       </p>
     </ClayModal.Body>
     <ClayModal.Footer
