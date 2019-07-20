@@ -4,33 +4,56 @@ import ClayButton from "@clayui/button";
 import ClayModal from "@clayui/modal";
 
 import { spritemap } from "../constants";
+const OTHER_REASONS = "other";
 
-const ModalContentDefault = ({
+const ModalContentForm = ({
   handleClose,
-  urlTermsOfUse,
-  reasons,
+  handleInputChange,
   handleSubmit,
-  isSending
+  isSending,
+  pathTermsOfUse,
+  reasons,
+  reason
 }) => (
   <form onSubmit={handleSubmit}>
     <ClayModal.Body>
       <p>
         You are about to report a violation of our{" "}
-        <a href={urlTermsOfUse}>Terms of Use</a>. All reports are strictly
+        <a href={pathTermsOfUse}>Terms of Use</a>. All reports are strictly
         confidential.
       </p>
       <div className="form-group">
-        <label className="control-label" htmlFor="Flags_reason">
+        <label className="control-label" htmlFor="reason">
           Reason for the Report
         </label>
-        <select className="form-control" id="Flags_reason">
+        <select
+          className="form-control"
+          id="reason"
+          name="reason"
+          onChange={handleInputChange}
+          value={reason}
+        >
           {Object.entries(reasons).map(([value, text]) => (
             <option key={value} value={value}>
               {text}
             </option>
           ))}
+          <option value={OTHER_REASONS}>Other Reason</option>
         </select>
       </div>
+      {reason === OTHER_REASONS && (
+        <div className="form-group">
+          <label className="control-label" htmlFor="other_reason">
+            Other Reason
+          </label>
+          <input
+            className="form-control"
+            id="other_reason"
+            name="other_reason"
+            onChange={handleInputChange}
+          />
+        </div>
+      )}
     </ClayModal.Body>
     <ClayModal.Footer
       last={
@@ -46,10 +69,10 @@ const ModalContentDefault = ({
     />
   </form>
 );
-ModalContentDefault.propTypes = {
+ModalContentForm.propTypes = {
   isSending: PropTypes.bool.isRequired,
   reasons: PropTypes.object.isRequired,
-  urlTermsOfUse: PropTypes.string.isRequired
+  pathTermsOfUse: PropTypes.string.isRequired
 };
 
 const ModalContentSuccess = ({ handleClose, companyName }) => (
@@ -82,21 +105,25 @@ ModalContentSuccess.propTypes = {
 const FlagsModal = ({
   companyName,
   handleClose,
+  handleInputChange,
   handleSubmit,
-  isSuccessful,
   isSending,
+  isSuccessful,
+  pathTermsOfUse,
   reasons,
-  urlTermsOfUse
+  reason
 }) => (
   <ClayModal onClose={handleClose} spritemap={spritemap}>
     <ClayModal.Header>Report Inappropriate Content</ClayModal.Header>
     {!isSuccessful ? (
-      <ModalContentDefault
+      <ModalContentForm
         handleClose={handleClose}
+        handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
-        reasons={reasons}
-        urlTermsOfUse={urlTermsOfUse}
         isSending={isSending}
+        pathTermsOfUse={pathTermsOfUse}
+        reasons={reasons}
+        reason={reason}
       />
     ) : (
       <ModalContentSuccess

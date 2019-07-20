@@ -16,21 +16,25 @@ class Flags extends React.Component {
   };
 
   static defaultProps = {
-    enabled: true
+    enabled: true,
+    // TODO: translate
+    message: "Report"
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
+      reason: Object.values(props.reasons)[0],
       reportDialogOpen: false,
       isSending: false,
       isSuccessful: false
     };
 
     this.handleClickClose = this.handleClickClose.bind(this);
-    this.handleSubmitReport = this.handleSubmitReport.bind(this);
     this.handleClickShow = this.handleClickShow.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmitReport = this.handleSubmitReport.bind(this);
   }
 
   handleClickShow() {
@@ -41,12 +45,24 @@ class Flags extends React.Component {
     this.setState({ reportDialogOpen: false });
   }
 
-  handleSubmitReport(e) {
-    e.preventDefault();
+  handleSubmitReport(event) {
+    event.preventDefault();
 
     this.setState({ isSending: true }, () => {
       delay(2000).then(() => this.setState({ isSuccessful: true }));
     });
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+
+    console.log({ state: this.state });
   }
 
   render() {
@@ -55,7 +71,7 @@ class Flags extends React.Component {
       enabled,
       message,
       reasons,
-      urlTermsOfUse
+      pathTermsOfUse
     } = this.props;
     const { reportDialogOpen, isSuccessful, isSending } = this.state;
 
@@ -75,11 +91,13 @@ class Flags extends React.Component {
           <FlagsModal
             companyName={companyName}
             handleClose={this.handleClickClose}
+            handleInputChange={this.handleInputChange}
             handleSubmit={this.handleSubmitReport}
             isSending={isSending}
             isSuccessful={isSuccessful}
+            pathTermsOfUse={pathTermsOfUse}
+            reason={this.state.reason}
             reasons={reasons}
-            urlTermsOfUse={urlTermsOfUse}
           />
         )}
       </div>
