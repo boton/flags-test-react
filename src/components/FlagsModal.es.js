@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import ClayButton from "@clayui/button";
 import ClayModal from "@clayui/modal";
 
-import { spritemap } from "../constants";
-const OTHER_REASONS = "other";
+import { OTHER_REASONS, spritemap } from "../constants.es";
 
 const ModalContentForm = ({
   handleClose,
@@ -43,13 +42,13 @@ const ModalContentForm = ({
       </div>
       {reason === OTHER_REASONS && (
         <div className="form-group">
-          <label className="control-label" htmlFor="other_reason">
+          <label className="control-label" htmlFor="otherReason">
             Other Reason
           </label>
           <input
             className="form-control"
-            id="other_reason"
-            name="other_reason"
+            id="otherReason"
+            name="otherReason"
             onChange={handleInputChange}
           />
         </div>

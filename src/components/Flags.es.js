@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import ClayButton from "@clayui/button";
 import ClayIcon from "@clayui/icon";
 
-import { spritemap } from "../constants";
-import FlagsModal from "./FlagsModal";
+import { OTHER_REASONS, spritemap } from "../constants.es";
+import FlagsModal from "./FlagsModal.es";
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+import { Liferay } from "../mock";
 
 class Flags extends React.Component {
   static propTypes = {
@@ -17,14 +17,14 @@ class Flags extends React.Component {
 
   static defaultProps = {
     enabled: true,
-    // TODO: translate
-    message: "Report"
+    message: Liferay.Language.get("report")
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
+      otherReason: "",
       reason: Object.values(props.reasons)[0],
       reportDialogOpen: false,
       isSending: false,
@@ -35,6 +35,15 @@ class Flags extends React.Component {
     this.handleClickShow = this.handleClickShow.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmitReport = this.handleSubmitReport.bind(this);
+  }
+
+  getReason() {
+    const { reason, otherReason } = this.state;
+
+    if (reason === OTHER_REASONS) {
+      return otherReason || window.Language.get("no-reason-specified");
+    }
+    return reason;
   }
 
   handleClickShow() {
@@ -48,21 +57,39 @@ class Flags extends React.Component {
   handleSubmitReport(event) {
     event.preventDefault();
 
+    const { namespace, uri } = this.props;
+
     this.setState({ isSending: true }, () => {
-      delay(2000).then(() => this.setState({ isSuccessful: true }));
+      const baseData = {
+        ...this.props.baseData,
+        [`${namespace}reason`]: this.getReason()
+      };
+
+      const formData = new FormData();
+
+      for (const name in baseData) {
+        formData.append(name, baseData[name]);
+      }
+
+      fetch(uri, {
+        body: formData,
+        credentials: "include",
+        method: "post"
+      })
+        .then(() => this.setState({ isSuccessful: true }))
+        .catch(() => this.setState({ isFailed: true }));
     });
   }
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value =
+      target.type === "checkbox" ? target.checked : target.value.trim();
     const name = target.name;
 
     this.setState({
       [name]: value
     });
-
-    console.log({ state: this.state });
   }
 
   render() {
